@@ -69,15 +69,18 @@
 	    };
 	  }
 	
-	  $('canvas').on("click", (e) => {
-	    let clickedPos = getMousePos(e.target, e);
-	    thisCanvas.clickHandler(clickedPos.x, clickedPos.y);
+	  $(document).on("keydown", (e) => {
+	    thisCanvas.handleDirection(e.keyCode, e);
 	    thisCanvas.draw(ctx);
 	  });
 	
 	  $('.pathfind').on("click", (e) => {
 	    thisCanvas.reset();
-	    thisCanvas.traverse();
+	    thisCanvas.draw(ctx);
+	  });
+	
+	  $('.solve').on("click", (e) => {
+	    thisCanvas.solve();
 	    thisCanvas.draw(ctx);
 	  });
 	})
@@ -98,36 +101,100 @@
 	    this.cellHash = {};
 	    this.cells = this.newCells();
 	    this.traverse();
+	
+	    this.startPoint;
+	    this.finishPoint;
+	    this.path;
 	  }
 	
 	  reset() {
 	    this.cells = this.newCells();
+	    this.traverse();
 	  }
 	
-	  clickHandler(x,y) {
-	    console.log(this.cells[Math.floor(x/Canvas.CELLDIM)][Math.floor(y/Canvas.CELLDIM)].neighbors());
-	    // this.cells[Math.floor(x/Canvas.CELLDIM)][Math.floor(y/Canvas.CELLDIM)].clickMe();
+	  handleDirection(keyCode, e) {
+	    switch(keyCode) {
+	      case 87:
+	      case 38:
+	        e.preventDefault();
+	        this.move([0,-1]);
+	        break;
+	      case 65:
+	      case 37:
+	        e.preventDefault();
+	        this.move([-1,0]);
+	        break;
+	      case 83:
+	      case 40:
+	        e.preventDefault();
+	        this.move([0,1]);
+	        break;
+	      case 68:
+	      case 39:
+	        e.preventDefault();
+	        this.move([1,0]);
+	        break;
+	    }
+	  }
+	
+	  move(direction) {
+	    let newX = this.startPoint.x + direction[0];
+	    let newY = this.startPoint.y + direction[1];
+	
+	    if (this.cells[newX][newY].status !== 'wall') {
+	      this.startPoint.carve();
+	      this.startPoint = this.cells[newX][newY];
+	      this.startPoint.setStart();
+	    }
+	
+	    if (this.startPoint.cellNum === this.finishPoint.cellNum) {
+	      this.reset();
+	    }
+	  }
+	
+	  getRandomPoint() {
+	    let randomPoint;
+	    while (!randomPoint || randomPoint.status ==='wall') {
+	      let randomRow = this.cells.sample();
+	      randomPoint = randomRow.sample();
+	    }
+	    return randomPoint;
+	  }
+	
+	  solve() {
+	    this.path.forEach((pathPoint, idx) => {
+	      if (idx === 0 || idx === this.path.length-1) {
+	
+	      } else {
+	        pathPoint.setSolution();
+	      }
+	    });
 	  }
 	
 	  traverse() {
 	    let cellStack = [this.cellHash[1]];
 	    let visited = [this.cellHash[1]];
+	    let longestLength = 0;
 	
 	    while(cellStack.length) {
 	      let myNeighbors = this.neighborCells(cellStack[cellStack.length-1], visited);
 	      if (myNeighbors.length === 0) {
+	        if (cellStack.length > longestLength) {
+	          this.path = cellStack.slice(0);
+	          longestLength = cellStack.length;
+	          this.finishPoint = cellStack[cellStack.length-1];
+	        }
 	        cellStack.pop();
 	        continue;
 	      }
 	      let nextCell = myNeighbors.sample();
 	      visited.push(nextCell);
 	      cellStack.push(nextCell);
-	
 	      this.carvePathBetween(cellStack[cellStack.length-2], nextCell)
 	    }
-	
-	
-	    this.printStack(cellStack);
+	    this.startPoint = this.cellHash[1];
+	    this.cellHash[1].setStart();
+	    this.finishPoint.setFinish();
 	  }
 	
 	  carvePathBetween(cellA, cellB) {
@@ -225,6 +292,18 @@
 	    this.status = 'path';
 	  }
 	
+	  setStart() {
+	    this.status = 'start';
+	  }
+	
+	  setFinish() {
+	    this.status = 'finish';
+	  }
+	
+	  setSolution() {
+	    this.status = 'solution';
+	  }
+	
 	  draw(ctx) {
 	    ctx.fillStyle = '#000000'
 	    let cellDim = Cell.GRIDSIZE;
@@ -232,9 +311,20 @@
 	
 	    if (this.status === 'wall') {
 	      ctx.fillRect(cellDim*this.x, cellDim*this.y, cellDim, cellDim);
+	    } else if (this.status === 'start') {
+	      ctx.fillStyle = 'green'
+	      ctx.fillRect(cellDim*this.x, cellDim*this.y, cellDim, cellDim);
+	      ctx.fillStyle = '#000000'
+	    } else if (this.status === 'finish') {
+	      ctx.fillStyle = 'red'
+	      ctx.fillRect(cellDim*this.x, cellDim*this.y, cellDim, cellDim);
+	      ctx.fillStyle = '#000000'
+	    } else if (this.status === 'solution'){
+	      ctx.fillStyle = '#9cecc5'
+	      ctx.fillRect(cellDim*this.x, cellDim*this.y, cellDim, cellDim);
+	      ctx.fillStyle = '#000000'
 	    } else {
-	      ctx.strokeRect(cellDim*this.x, cellDim*this.y, cellDim, cellDim);
-	      // ctx.fillText(this.cellNum, cellDim*this.x, cellDim*this.y+15);
+	      // ctx.strokeRect(cellDim*this.x, cellDim*this.y, cellDim, cellDim);
 	    }
 	  }
 	

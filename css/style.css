@@ -4,7 +4,52 @@ body {
   color: white;
 }
 
+title {
+  font-size: 48px;
+}
+
+a {
+  color: white;
+}
+
+.the-world {
+  width: 710px;
+  margin: 0 auto;
+}
+
+.heading {
+  position: relative;
+}
+
+.heading-right {
+  position: absolute;
+  font-size: 14px;
+  top: 10px;
+  right: 0;
+}
+
+.heading-right div {
+  margin: 5px;
+}
+
+.title {
+  margin-top: 15px;
+  font-size: 48px;
+}
+
+.subtitle {
+  margin-bottom: 20px;
+  font-size: 18px;
+  font-style: italic;
+}
+
+.below-canvas {
+  margin-left: 10px;
+  margin-bottom: 100px;
+}
+
 .button {
+  margin-right: 20px;
   float: left;
   padding: 10px;
   border-radius: 5px;
@@ -14,4 +59,13 @@ body {
 .button:hover {
   cursor: pointer;
   background:pink;
+}
+
+.about-architect {
+  width: 500px;
+  float: right;
+}
+
+.heading {
+  font-size: 20px;
 }

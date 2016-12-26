@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>mazr</title>
+    <title>Architect</title>
 
     <link rel="stylesheet" href="css/style.css">
 
@@ -14,11 +14,50 @@
     <script src="bundle.js" charset="utf-8"></script>
   </head>
   <body>
-      <canvas id="canvas"></canvas>
-      <div class="below-canvas">
-        <div class="pathfind button">
-          New Maze
+    <div class="the-world">
+      <div class="heading group">
+          <div class="title">
+            Architect
+          </div>
+          <div class="subtitle">
+            "You have two minutes to draw a maze that takes me one minute to solve."
+            <br>
+            -Cobb, Inception
+          </div>
+
+          <div class="heading-right group">
+            <div class="heading-right-item">
+              <a href="http://lizha.ng/">Website</a>
+            </div>
+            <div class="heading-right-item">
+              <a href="https://github.com/vorpus/">Github</a>
+            </div>
+            <div class="heading-right-item">
+              <a href="https://www.linkedin.com/in/zhangio">Linkedin</a>
+            </div>
+          </div>
         </div>
-      </div>
+        <canvas id="canvas"></canvas>
+        <div class="below-canvas">
+          <div class="controls group">
+            <div class="pathfind button">
+              New Maze
+            </div>
+
+            <div class="solve button">
+              Solve
+            </div>
+          </div>
+
+          <div class="about-architect group">
+            <div class="heading">
+              What's going on here?
+            </div>
+            This is an implementation of Depth First Search to construct a random maze. Use your arrow keys to play!
+            Find more on my <a href="https://github.com/vorpus/architect" target="_blank">Github (readme)</a>!
+          </div>
+        </div>
+    </div>
+
   </body>
 </html>
