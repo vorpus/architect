@@ -1,0 +1,17 @@
+body {
+  font-family: sans-serif;
+  background: black;
+  color: white;
+}
+
+.button {
+  float: left;
+  padding: 10px;
+  border-radius: 5px;
+  background: red;
+}
+
+.button:hover {
+  cursor: pointer;
+  background:pink;
+}
